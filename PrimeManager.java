@@ -5,6 +5,7 @@ public class PrimeManager {
 	 * true in a value means that the number is prime
 	 */
 	private boolean[] _primes;
+	private int _iteratorIndex;
 
 	/**
 	 * default constructor. picks an arbitrary value to initialize the cached primes.
@@ -25,6 +26,8 @@ public class PrimeManager {
 		this._primes = new boolean[maxPrime];
 		
 		this.sieve();
+		
+		this._iteratorIndex = -1;
 	}
 	
 	/**
@@ -35,8 +38,8 @@ public class PrimeManager {
 	 */
 	public boolean IsPrime(int numToCheck)
 	{
-		//anything less than 1 should be considered not a prime
-		if (numToCheck <= 0)
+		//anything less than or equal to 1 should be considered not a prime
+		if (numToCheck <= 1)
 		{
 			return false;
 		}
@@ -57,6 +60,29 @@ public class PrimeManager {
 	public int MaxNumberChecked()
 	{
 		return this._primes.length;
+	}
+	
+	public int GetNextPrime()
+	{
+		while(true)
+		{
+			this._iteratorIndex++;
+			
+			if (this._iteratorIndex >= this._primes.length)
+			{
+				sieve(2 * this._primes.length + 1);
+			}
+			
+			if (this._primes[_iteratorIndex])
+			{
+				return _iteratorIndex + 1;
+			}
+		}
+	}
+	
+	public void ResetInterator()
+	{
+		this._iteratorIndex = -1;
 	}
 	
 	/**
@@ -87,7 +113,7 @@ public class PrimeManager {
 		int primesToCompute = this._primes.length;
 		
 		boolean[] sieve = new boolean[primesToCompute]; //true in the sieve means it is not a prime
-		this._primes[0] = true;
+		this._primes[0] = false;
 		
 		for (int i = 1; i < primesToCompute; i++)
 		{
